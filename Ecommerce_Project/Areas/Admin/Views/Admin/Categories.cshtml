@@ -1,0 +1,102 @@
+﻿<link href="~/css/admin-theme.css" rel="stylesheet" />
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Categories";
+    ViewData["PageTitle"] = "Categories";
+    ViewData["PageCrumb"] = "Admin / Categories";
+}
+<div id="page-categories" class="page-section">
+    <div class="page-header">
+        <h5><i class="bi bi-tags-fill me-2" style="color:var(--gold)"></i>Categories</h5>
+        <button class="btn-lx-primary" onclick="openModal('modal-category')">
+            <i class="bi bi-plus-lg"></i>Add Category
+        </button>
+    </div>
+    <div class="lx-card">
+        <div class="filter-bar">
+            <div class="search-wrap">
+                <i class="bi bi-search"></i>
+                <input class="form-control" type="text" placeholder="Search categories…" oninput="filterTbl('cat-tbl',this.value)" />
+            </div>
+            <button class="btn-lx-outline"><i class="bi bi-download"></i>Export</button>
+        </div>
+        <div class="table-wrap">
+            <table class="lx-table" id="cat-tbl">
+                <thead>
+                    <tr>
+                        <th style="width:36px"><input type="checkbox" onclick="toggleAll(this,'cat-tbl')" /></th>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Slug</th>
+                        <th>Parent</th>
+                        <th>Products</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-search="watches horology">
+                        <td><input type="checkbox" /></td>
+                        <td>1</td>
+                        <td><div style="display:flex;align-items:center;gap:8px"><i class="bi bi-watch" style="color:var(--gold);font-size:18px"></i><strong>Watches</strong></div></td>
+                        <td><code style="font-size:11px;background:#f0f5f2;padding:2px 7px;border-radius:5px">watches</code></td>
+                        <td><span class="lx-badge b-secondary">Top Level</span></td>
+                        <td>142</td>
+                        <td style="font-size:12px;color:var(--muted)">Jan 10, 2024</td>
+                        <td>
+                            <div style="display:flex;gap:5px">
+                                <button class="btn-icon edit" onclick="openModal('modal-category')" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+                                <button class="btn-icon del" onclick="confirmDelete('category')" title="Delete"><i class="bi bi-trash3-fill"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-search="bags handbags luxury">
+                        <td><input type="checkbox" /></td>
+                        <td>2</td>
+                        <td><div style="display:flex;align-items:center;gap:8px"><i class="bi bi-handbag-fill" style="color:var(--gold);font-size:18px"></i><strong>Luxury Bags</strong></div></td>
+                        <td><code style="font-size:11px;background:#f0f5f2;padding:2px 7px;border-radius:5px">luxury-bags</code></td>
+                        <td><span class="lx-badge b-secondary">Top Level</span></td>
+                        <td>89</td>
+                        <td style="font-size:12px;color:var(--muted)">Jan 10, 2024</td>
+                        <td>
+                            <div style="display:flex;gap:5px">
+                                <button class="btn-icon edit" onclick="openModal('modal-category')" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+                                <button class="btn-icon del" onclick="confirmDelete('category')" title="Delete"><i class="bi bi-trash3-fill"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-search="accessories jewellery">
+                        <td><input type="checkbox" /></td>
+                        <td>3</td>
+                        <td><div style="display:flex;align-items:center;gap:8px"><i class="bi bi-gem" style="color:var(--gold);font-size:18px"></i><strong>Accessories</strong></div></td>
+                        <td><code style="font-size:11px;background:#f0f5f2;padding:2px 7px;border-radius:5px">accessories</code></td>
+                        <td><span class="lx-badge b-secondary">Top Level</span></td>
+                        <td>17</td>
+                        <td style="font-size:12px;color:var(--muted)">Mar 15, 2024</td>
+                        <td>
+                            <div style="display:flex;gap:5px">
+                                <button class="btn-icon edit" onclick="openModal('modal-category')" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+                                <button class="btn-icon del" onclick="confirmDelete('category')" title="Delete"><i class="bi bi-trash3-fill"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-search="limited editions rare">
+                        <td><input type="checkbox" /></td>
+                        <td>4</td>
+                        <td><div style="display:flex;align-items:center;gap:8px"><i class="bi bi-stars" style="color:var(--gold);font-size:18px"></i><strong>Limited Editions</strong></div></td>
+                        <td><code style="font-size:11px;background:#f0f5f2;padding:2px 7px;border-radius:5px">limited-editions</code></td>
+                        <td><span class="lx-badge b-secondary">Top Level</span></td>
+                        <td>12</td>
+                        <td style="font-size:12px;color:var(--muted)">May 1, 2024</td>
+                        <td>
+                            <div style="display:flex;gap:5px">
+                                <button class="btn-icon edit" onclick="openModal('modal-category')" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+                                <button class="btn-icon del" onclick="confirmDelete('category')" title="Delete"><i class="bi bi-trash3-fill"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,146 @@
+﻿<link href="~/css/admin-theme.css" rel="stylesheet" />
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Orders";
+    ViewData["PageTitle"] = "Orders";
+    ViewData["PageCrumb"] = "Admin / Orders";
+}
+<div id="page-orders" class="page-section">
+    <div class="page-header">
+        <h5><i class="bi bi-receipt-cutoff me-2" style="color:var(--gold)"></i>Orders</h5>
+        <button class="btn-lx-outline" onclick="toast('Exporting orders CSV…','info')"><i class="bi bi-download"></i>Export CSV</button>
+    </div>
+    <div class="lx-card">
+        <div class="filter-bar">
+            <div class="search-wrap">
+                <i class="bi bi-search"></i>
+                <input class="form-control" type="text" placeholder="Search by order # or customer name…" oninput="filterTbl('orders-tbl',this.value)" />
+            </div>
+            <select class="form-select" style="width:150px">
+                <option value="">All Status</option>
+                <option>Processing</option>
+                <option>Completed</option>
+                <option>Cancelled</option>
+            </select>
+            <input type="date" class="form-control" style="width:150px" />
+            <select class="form-select" style="width:150px">
+                <option value="">All Customers</option>
+                <option>James Vance</option>
+                <option>Sophia Reed</option>
+                <option>Marco Totti</option>
+            </select>
+        </div>
+        <div class="table-wrap">
+            <table class="lx-table" id="orders-tbl">
+                <thead>
+                    <tr>
+                        <th>#Order</th>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Update Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-search="ord-1042 james vance">
+                        <td><strong>#ORD-1042</strong></td>
+                        <td><div class="td-name">James Vance</div><div class="td-sub">james@email.com</div></td>
+                        <td>2 items</td>
+                        <td><strong>$13,200</strong></td>
+                        <td><span class="lx-badge b-warning"><i class="bi bi-hourglass-split"></i>Processing</span></td>
+                        <td style="font-size:12px;color:var(--muted)">May 10, 2025</td>
+                        <td>
+                            <select class="form-select form-select-sm" style="width:140px;font-size:12px" onchange="updateStatus(this)">
+                                <option>Processing</option>
+                                <option>Completed</option>
+                                <option>Cancelled</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div style="display:flex;gap:5px">
+                                <button class="btn-icon view" onclick="openModal('modal-order')" title="View Detail"><i class="bi bi-eye-fill"></i></button>
+                                <button class="btn-icon del" onclick="confirmDelete('order')" title="Delete"><i class="bi bi-trash3-fill"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-search="ord-1041 sophia reed">
+                        <td><strong>#ORD-1041</strong></td>
+                        <td><div class="td-name">Sophia Reed</div><div class="td-sub">sophia@email.com</div></td>
+                        <td>1 item</td>
+                        <td><strong>$18,900</strong></td>
+                        <td><span class="lx-badge b-success"><i class="bi bi-check-circle-fill"></i>Completed</span></td>
+                        <td style="font-size:12px;color:var(--muted)">May 9, 2025</td>
+                        <td>
+                            <select class="form-select form-select-sm" style="width:140px;font-size:12px" onchange="updateStatus(this)">
+                                <option>Processing</option>
+                                <option selected>Completed</option>
+                                <option>Cancelled</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div style="display:flex;gap:5px">
+                                <button class="btn-icon view" onclick="openModal('modal-order')" title="View Detail"><i class="bi bi-eye-fill"></i></button>
+                                <button class="btn-icon del" onclick="confirmDelete('order')" title="Delete"><i class="bi bi-trash3-fill"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-search="ord-1040 marco totti">
+                        <td><strong>#ORD-1040</strong></td>
+                        <td><div class="td-name">Marco Totti</div><div class="td-sub">marco@email.com</div></td>
+                        <td>3 items</td>
+                        <td><strong>$89,000</strong></td>
+                        <td><span class="lx-badge b-success"><i class="bi bi-check-circle-fill"></i>Completed</span></td>
+                        <td style="font-size:12px;color:var(--muted)">May 8, 2025</td>
+                        <td>
+                            <select class="form-select form-select-sm" style="width:140px;font-size:12px" onchange="updateStatus(this)">
+                                <option>Processing</option>
+                                <option selected>Completed</option>
+                                <option>Cancelled</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div style="display:flex;gap:5px">
+                                <button class="btn-icon view" onclick="openModal('modal-order')" title="View Detail"><i class="bi bi-eye-fill"></i></button>
+                                <button class="btn-icon del" onclick="confirmDelete('order')" title="Delete"><i class="bi bi-trash3-fill"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-search="ord-1039 elena park">
+                        <td><strong>#ORD-1039</strong></td>
+                        <td><div class="td-name">Elena Park</div><div class="td-sub">elena@email.com</div></td>
+                        <td>1 item</td>
+                        <td><strong>$9,800</strong></td>
+                        <td><span class="lx-badge b-danger"><i class="bi bi-x-circle-fill"></i>Cancelled</span></td>
+                        <td style="font-size:12px;color:var(--muted)">May 7, 2025</td>
+                        <td>
+                            <select class="form-select form-select-sm" style="width:140px;font-size:12px" onchange="updateStatus(this)">
+                                <option>Processing</option>
+                                <option>Completed</option>
+                                <option selected>Cancelled</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div style="display:flex;gap:5px">
+                                <button class="btn-icon view" onclick="openModal('modal-order')" title="View Detail"><i class="bi bi-eye-fill"></i></button>
+                                <button class="btn-icon del" onclick="confirmDelete('order')" title="Delete"><i class="bi bi-trash3-fill"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-top:1px solid var(--border)">
+            <span style="font-size:12px;color:var(--muted)">Showing 1–4 of 1,294 orders</span>
+            <div class="lx-pagination">
+                <button class="pg-btn"><i class="bi bi-chevron-left"></i></button>
+                <button class="pg-btn active">1</button>
+                <button class="pg-btn">2</button>
+                <button class="pg-btn">3</button>
+                <button class="pg-btn"><i class="bi bi-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,178 @@
+﻿<link href="~/css/admin-theme.css" rel="stylesheet" />
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Products";
+    ViewData["PageTitle"] = "Products";
+    ViewData["PageCrumb"] = "Admin / Products";
+}
+<div id="page-products" class="page-section">
+    <div class="page-header">
+        <h5><i class="bi bi-box-seam-fill me-2" style="color:var(--gold)"></i>Products</h5>
+        <button class="btn-lx-primary" onclick="openModal('modal-product')">
+            <i class="bi bi-plus-lg"></i>Add Product
+        </button>
+    </div>
+
+    <div class="lx-card">
+        <div class="filter-bar">
+            <div class="search-wrap">
+                <i class="bi bi-search"></i>
+                <input class="form-control" type="text" placeholder="Search by name, brand, SKU…" oninput="filterTbl('products-tbl',this.value)" />
+            </div>
+            <select class="form-select" style="width:140px" onchange="filterTbl('products-tbl',this.value)">
+                <option value="">All Categories</option>
+                <option>Watches</option>
+                <option>Luxury Bags</option>
+                <option>Accessories</option>
+            </select>
+            <select class="form-select" style="width:140px">
+                <option value="">All Stock</option>
+                <option>In Stock</option>
+                <option>Low Stock</option>
+                <option>Out of Stock</option>
+            </select>
+            <select class="form-select" style="width:130px">
+                <option>Sort: Newest</option>
+                <option>Sort: Price ↑</option>
+                <option>Sort: Price ↓</option>
+            </select>
+            <button class="btn-lx-outline" onclick="toast('Exporting CSV…','info')">
+                <i class="bi bi-download"></i>Export
+            </button>
+        </div>
+
+        <div class="table-wrap">
+            <table class="lx-table" id="products-tbl">
+                <thead>
+                    <tr>
+                        <th style="width:36px"><input type="checkbox" onclick="toggleAll(this,'products-tbl')" /></th>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Brand</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Images</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-search="rolex datejust watches rx-dj41">
+                        <td><input type="checkbox" /></td>
+                        <td><div class="td-product"><div class="td-thumb">⌚</div><div><div class="td-name">Datejust 41</div><div class="td-sub">SKU: RX-DJ41-GRN</div></div></div></td>
+                        <td>Watches</td>
+                        <td>Rolex</td>
+                        <td><strong>$13,200</strong></td>
+                        <td><div class="stock-bar"><div class="stock-track"><div class="stock-fill" style="width:70%;background:var(--success)"></div></div><span style="font-size:12px">7 units</span></div></td>
+                        <td><span style="font-size:12px;color:var(--muted)"><i class="bi bi-images"></i> 4</span></td>
+                        <td><span class="lx-badge b-success"><i class="bi bi-circle-fill" style="font-size:7px"></i>Active</span></td>
+                        <td>
+                            <div style="display:flex;gap:5px">
+                                <button class="btn-icon edit" onclick="openModal('modal-product');toast('Loading product…','')" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+                                <button class="btn-icon view" title="Preview"><i class="bi bi-eye-fill"></i></button>
+                                <button class="btn-icon del" onclick="confirmDelete('product')" title="Delete"><i class="bi bi-trash3-fill"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-search="saint laurent loulou bags sl-loulou">
+                        <td><input type="checkbox" /></td>
+                        <td><div class="td-product"><div class="td-thumb">👛</div><div><div class="td-name">Loulou Bag</div><div class="td-sub">SKU: SL-LOULOU-BLK</div></div></div></td>
+                        <td>Luxury Bags</td>
+                        <td>Saint Laurent</td>
+                        <td><strong>$2,590</strong></td>
+                        <td><div class="stock-bar"><div class="stock-track"><div class="stock-fill" style="width:30%;background:var(--warning)"></div></div><span style="font-size:12px">3 units</span></div></td>
+                        <td><span style="font-size:12px;color:var(--muted)"><i class="bi bi-images"></i> 6</span></td>
+                        <td><span class="lx-badge b-warning"><i class="bi bi-circle-fill" style="font-size:7px"></i>Low Stock</span></td>
+                        <td>
+                            <div style="display:flex;gap:5px">
+                                <button class="btn-icon edit" onclick="openModal('modal-product')" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+                                <button class="btn-icon view" title="Preview"><i class="bi bi-eye-fill"></i></button>
+                                <button class="btn-icon del" onclick="confirmDelete('product')" title="Delete"><i class="bi bi-trash3-fill"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-search="vacheron overseas watches vc-ovs">
+                        <td><input type="checkbox" /></td>
+                        <td><div class="td-product"><div class="td-thumb">🕰</div><div><div class="td-name">Overseas Auto</div><div class="td-sub">SKU: VC-OVS-BLU</div></div></div></td>
+                        <td>Watches</td>
+                        <td>Vacheron Constantin</td>
+                        <td><strong>$34,500</strong></td>
+                        <td><div class="stock-bar"><div class="stock-track"><div class="stock-fill" style="width:50%;background:var(--success)"></div></div><span style="font-size:12px">5 units</span></div></td>
+                        <td><span style="font-size:12px;color:var(--muted)"><i class="bi bi-images"></i> 3</span></td>
+                        <td><span class="lx-badge b-success"><i class="bi bi-circle-fill" style="font-size:7px"></i>Active</span></td>
+                        <td>
+                            <div style="display:flex;gap:5px">
+                                <button class="btn-icon edit" onclick="openModal('modal-product')" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+                                <button class="btn-icon view" title="Preview"><i class="bi bi-eye-fill"></i></button>
+                                <button class="btn-icon del" onclick="confirmDelete('product')" title="Delete"><i class="bi bi-trash3-fill"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-search="hermes kelly bags hr-kly">
+                        <td><input type="checkbox" /></td>
+                        <td><div class="td-product"><div class="td-thumb">👜</div><div><div class="td-name">Kelly 28</div><div class="td-sub">SKU: HR-KLY28-GRN</div></div></div></td>
+                        <td>Luxury Bags</td>
+                        <td>Hermès</td>
+                        <td><strong>$18,900</strong></td>
+                        <td><div class="stock-bar"><div class="stock-track"><div class="stock-fill" style="width:10%;background:var(--danger)"></div></div><span style="font-size:12px;color:var(--danger)">1 unit</span></div></td>
+                        <td><span style="font-size:12px;color:var(--muted)"><i class="bi bi-images"></i> 5</span></td>
+                        <td><span class="lx-badge b-danger"><i class="bi bi-circle-fill" style="font-size:7px"></i>Low Stock</span></td>
+                        <td>
+                            <div style="display:flex;gap:5px">
+                                <button class="btn-icon edit" onclick="openModal('modal-product')" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+                                <button class="btn-icon view" title="Preview"><i class="bi bi-eye-fill"></i></button>
+                                <button class="btn-icon del" onclick="confirmDelete('product')" title="Delete"><i class="bi bi-trash3-fill"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-search="patek philippe nautilus watches pp-nau">
+                        <td><input type="checkbox" /></td>
+                        <td><div class="td-product"><div class="td-thumb">⌚</div><div><div class="td-name">Nautilus 5711</div><div class="td-sub">SKU: PP-NAU-5711</div></div></div></td>
+                        <td>Watches</td>
+                        <td>Patek Philippe</td>
+                        <td><strong>$89,000</strong></td>
+                        <td><div class="stock-bar"><div class="stock-track"><div class="stock-fill" style="width:90%;background:var(--success)"></div></div><span style="font-size:12px">9 units</span></div></td>
+                        <td><span style="font-size:12px;color:var(--muted)"><i class="bi bi-images"></i> 7</span></td>
+                        <td><span class="lx-badge b-success"><i class="bi bi-circle-fill" style="font-size:7px"></i>Active</span></td>
+                        <td>
+                            <div style="display:flex;gap:5px">
+                                <button class="btn-icon edit" onclick="openModal('modal-product')" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+                                <button class="btn-icon view" title="Preview"><i class="bi bi-eye-fill"></i></button>
+                                <button class="btn-icon del" onclick="confirmDelete('product')" title="Delete"><i class="bi bi-trash3-fill"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-search="chanel classic flap bags cc-flp">
+                        <td><input type="checkbox" /></td>
+                        <td><div class="td-product"><div class="td-thumb">👝</div><div><div class="td-name">Classic Flap Medium</div><div class="td-sub">SKU: CC-FLP-M-BLK</div></div></div></td>
+                        <td>Luxury Bags</td>
+                        <td>Chanel</td>
+                        <td><strong>$9,800</strong></td>
+                        <td><div class="stock-bar"><div class="stock-track"><div class="stock-fill" style="width:0%;background:var(--danger)"></div></div><span style="font-size:12px;color:var(--danger)">Out of Stock</span></div></td>
+                        <td><span style="font-size:12px;color:var(--muted)"><i class="bi bi-images"></i> 4</span></td>
+                        <td><span class="lx-badge b-secondary"><i class="bi bi-circle-fill" style="font-size:7px"></i>Inactive</span></td>
+                        <td>
+                            <div style="display:flex;gap:5px">
+                                <button class="btn-icon edit" onclick="openModal('modal-product')" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+                                <button class="btn-icon view" title="Preview"><i class="bi bi-eye-fill"></i></button>
+                                <button class="btn-icon del" onclick="confirmDelete('product')" title="Delete"><i class="bi bi-trash3-fill"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-top:1px solid var(--border)">
+            <span style="font-size:12px;color:var(--muted)">Showing 1–6 of 248 products</span>
+            <div class="lx-pagination">
+                <button class="pg-btn"><i class="bi bi-chevron-left"></i></button>
+                <button class="pg-btn active">1</button>
+                <button class="pg-btn">2</button>
+                <button class="pg-btn">3</button>
+                <span style="color:var(--muted);font-size:13px">…</span>
+                <button class="pg-btn">42</button>
+                <button class="pg-btn"><i class="bi bi-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+</div>

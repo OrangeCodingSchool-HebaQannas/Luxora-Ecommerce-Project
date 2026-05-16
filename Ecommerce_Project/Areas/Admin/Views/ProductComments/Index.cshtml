@@ -1,0 +1,214 @@
+﻿@model IEnumerable<Ecommerce_Project.Models.ReviewItemViewModel>
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Reviews & Ratings";
+}
+
+@* Dashboard Metrics Grid *@
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon icon-gold"><i class="bi bi-chat-left-text-fill"></i></div>
+            <div>
+                <div class="stat-num">@Model.Count()</div>
+                <div class="stat-lbl">Total Submissions</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon icon-green"><i class="bi bi-shield-check"></i></div>
+            <div>
+                <div class="stat-num">@Model.Count(c => c.IsApproved)</div>
+                <div class="stat-lbl">Live on Storefront</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon icon-red"><i class="bi bi-shield-exclamation"></i></div>
+            <div>
+                <div class="stat-num">@Model.Count(c => !c.IsApproved)</div>
+                <div class="stat-lbl">Pending Review</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Moderation Table *@
+<div class="lx-card shadow-sm border-0">
+    <div class="lx-card-header">
+        <div class="lx-card-title">
+            <i class="bi bi-patch-check-fill" style="color:var(--gold);"></i>
+            Moderation Queue
+        </div>
+        <div class="d-flex gap-2 align-items-center">
+            <a asp-area="Admin" asp-controller="ProductComments" asp-action="Archive" class="btn-lx-outline text-danger border-danger">
+                <i class="bi bi-trash3-fill me-1"></i> View Trash Archive
+            </a>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table class="lx-table" id="comments-table">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Product Target</th>
+                    <th>Evaluation & Feedback</th>
+                    <th>State</th>
+                    <th style="text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr id="comment-row-@item.CommentId"
+                        data-approved="@item.IsApproved.ToString().ToLower()"
+                        data-search="@item.CustomerName @item.ProductName @item.CommentText @(item.RatingValue != null ? item.RatingValue + " stars" : "")">
+                        <td>
+                            <div class="fw-bold" style="color:var(--text);">@item.CustomerName</div>
+                            <div style="font-size:11px; color:var(--muted);">@item.CustomerEmail</div>
+                        </td>
+                        <td>
+                            <div class="fw-bold" style="color:var(--gold);">@item.ProductName</div>
+                            <div style="font-size:11px; color:var(--muted);"><i class="bi bi-clock me-1"></i>@item.CreatedAt.ToString("MMM dd, yyyy")</div>
+                        </td>
+                        <td>
+                            @* Custom Rating Stars Assembly Line *@
+                            <div class="star-rating mb-1" style="color: var(--gold); font-size: 13px;">
+                                @if (item.RatingValue.HasValue)
+                                {
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= item.RatingValue.Value)
+                                        {
+                                            <i class="bi bi-star-fill"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-star" style="opacity: 0.25;"></i>
+                                        }
+                                    }
+                                    <span class="ms-1 text-muted" style="font-size: 11px;">(@item.RatingValue.Value/5)</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted" style="font-size: 11px; font-style: italic;"><i class="bi bi-chat-dots me-1"></i>Comment Only</span>
+                                }
+                            </div>
+
+                            <div class="review-text" style="font-size:13px; line-height:1.4; color:var(--text-light);">
+                                "@item.CommentText"
+                            </div>
+                        </td>
+                        <td>
+                            <span id="badge-@item.CommentId" class="lx-badge @(item.IsApproved ? "b-success" : "b-warning")">
+                                <i class="bi @(item.IsApproved ? "bi-check-circle-fill" : "bi-hourglass-split")"></i>
+                                @(item.IsApproved ? "Approved" : "Pending")
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2 justify-content-end">
+                                <button type="button" class="btn-icon view" id="btn-toggle-@item.CommentId" onclick="toggleCommentApproval(@item.CommentId)" title="Toggle Visibility">
+                                    <i class="bi @(item.IsApproved ? "bi-shield-x" : "bi-shield-check")"></i>
+                                </button>
+                                <button type="button" class="btn-icon del" onclick="softDeleteComment(@item.CommentId, this)" title="Soft Delete">
+                                    <i class="bi bi-trash3-fill"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        /* ── Toggle Approval Status ────────────────────────── */
+        async function toggleCommentApproval(id) {
+            try {
+                // Hits your Admin route to toggle the IsApproved flag
+                const response = await fetch(`/Admin/ProductComments/ToggleApproval?id=${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value ?? ''
+                    }
+                });
+
+                if (!response.ok) throw new Error('Network error');
+                const data = await response.json();
+
+                if (data.success) {
+                    const badge = document.getElementById(`badge-${id}`);
+                    const button = document.getElementById(`btn-toggle-${id}`);
+                    const row = document.getElementById(`comment-row-${id}`);
+
+                    // Dynamically update UI state attributes
+                    row.dataset.approved = data.approved;
+
+                    if (data.approved) {
+                        badge.className = 'lx-badge b-success';
+                        badge.innerHTML = '<i class="bi bi-check-circle-fill"></i> Approved';
+                        button.setAttribute('title', 'Revoke Approval');
+                        button.querySelector('i').className = 'bi bi-shield-x';
+                        if (typeof notify === "function") notify('success', 'Vault Moderation', 'Review has been approved live.');
+                    } else {
+                        badge.className = 'lx-badge b-warning';
+                        badge.innerHTML = '<i class="bi bi-hourglass-split"></i> Pending';
+                        button.setAttribute('title', 'Approve Review');
+                        button.querySelector('i').className = 'bi bi-shield-check';
+                        if (typeof notify === "function") notify('warning', 'Vault Moderation', 'Review approval revoked.');
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                Swal.fire('Error', 'Could not process approval switch.', 'error');
+            }
+        }
+
+        /* ── Soft Delete Client Execution ───────────────────── */
+        async function softDeleteComment(id, element) {
+            const result = await Swal.fire({
+                title: 'Move to Trash?',
+                text: "This review will be hidden from production but preserved in the archive.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#004225', // Emerald
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Trash it!'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`/Admin/ProductComments/SoftDeleteComment?id=${id}`, {
+                        method: 'POST',
+                        headers: {
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value ?? ''
+                        }
+                    });
+
+                    if (!response.ok) throw new Error('Deletion failed');
+                    const data = await response.json();
+
+                    if (data.success) {
+                        const row = element.closest('tr');
+                        row.style.transition = "all 0.4s ease";
+                        row.style.opacity = "0";
+                        row.style.transform = "scale(0.95)";
+
+                        setTimeout(() => {
+                            row.remove();
+                        }, 400);
+
+                        if (typeof notify === "function") notify('success', 'Vault Action', 'Comment removed smoothly.');
+                    }
+                } catch (error) {
+                    Swal.fire('Error!', 'Could not soft delete this entry.', 'error');
+                }
+            }
+        }
+    </script>
+}
